@@ -14,14 +14,18 @@ def y_func(t, t_max=100, dt=1):
 
 def reset_sim():
     del st.session_state["data"]
-    st.session_state.data = pd.DataFrame([{"t": 0, "y": 0}], columns=["t", "y"])
+    st.session_state.data = pd.DataFrame(
+        [{"t": 0, "y": 0}], columns=["t", "y"]
+    ).set_index("t", drop=False)
 
 
 if not "sleep_time" in st.session_state:
     st.session_state.sleep_time = 1
 
 if not "data" in st.session_state:
-    st.session_state.data = pd.DataFrame([{"t": 0, "y": 0}], columns=["t", "y"])
+    st.session_state.data = pd.DataFrame(
+        [{"t": 0, "y": 0}], columns=["t", "y"]
+    ).set_index("t", drop=False)
 
 
 with st.sidebar:
@@ -42,9 +46,11 @@ def write_graph(data):
     return chart1
 
 
+col1, col2 = st.columns(2)
+
 chart = write_graph(st.session_state.data)
-st.altair_chart(chart)
-buggy_chart = st.altair_chart(chart)
+col1.altair_chart(chart)
+buggy_chart = col2.altair_chart(chart)
 
 
 if st.session_state.run:
@@ -52,7 +58,13 @@ if st.session_state.run:
 
     try:
         t_step, y = next(y_func(data["t"].iloc[-1]))
-        df_n = pd.DataFrame([{"t": t_step, "y": y}])
+        df_n = pd.DataFrame([{"t": t_step, "y": y}]).set_index("t", drop=False)
+
+        st.subheader("Returned Data")
+        st.write(df_n)
+
+        st.subheader("Full DataFrame")
+        st.dataframe(data)
 
         buggy_chart.add_rows(df_n)
 
