@@ -15,7 +15,7 @@ def y_func(t, t_max=100, dt=1):
 def reset_sim():
     del st.session_state["data"]
     st.session_state.data = pd.DataFrame(
-        [{"t": 0, "y": 0}], columns=["t", "y"]
+        [{"t": 0, "y": 0.0}], columns=["t", "y"]
     ).set_index("t", drop=False)
 
 
@@ -24,7 +24,7 @@ if not "sleep_time" in st.session_state:
 
 if not "data" in st.session_state:
     st.session_state.data = pd.DataFrame(
-        [{"t": 0, "y": 0}], columns=["t", "y"]
+        [{"t": 0, "y": 0.0}], columns=["t", "y"]
     ).set_index("t", drop=False)
 
 
